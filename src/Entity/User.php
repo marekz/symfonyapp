@@ -2,151 +2,92 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="user")
- * @UniqueEntity(fields="email")
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ApiResource()
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface, \Serializable {
-
+class User
+{
     /**
-     * @ORM\Id
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
-     * @Assert\NotBlank()
-     * @Assert\Email()
+     * @ORM\Column(type="string", length=255)
      */
-    private $email;
+    private $username;
 
     /**
-     * @Assert\NotBlank()
-     * @Assert\Length(max=250)
-     */
-    private $plainPassword;
-
-    /**
-     * The below length depends on the "algorithm" you use for encoding
-     * the password, but this works well with bcrypt.
-     *
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", length=255)
      */
     private $password;
 
     /**
-     * @ORM\Column(name="is_active", type="boolean")
+     * @ORM\Column(type="string", length=255)
      */
-    private $isActive;
+    private $name;
 
     /**
-     * @ORM\Column(name="roles", type="array")
+     * @var
+     * @ORM\ManyToMany(targetEntity="Vehicle", inversedBy="owners")
+     * @ORM\JoinTable(name="users_vehicles")
      */
-    private $roles = array();
+    private $vehicles;
 
-
-    public function __construct() {
-        $this->isActive = true;
-        // may not be needed, see section on salt below
-        // $this->salt = md5(uniqid('', true));
-    }
-
-    public function getUsername() {
-        return $this->email;
-    }
-
-    public function getSalt() {
-        // you *may* need a real salt depending on your encoder
-        // see section on salt below
-        return null;
-    }
-
-    public function getPassword() {
-        return $this->password;
-    }
-
-    function setPassword($password) {
-        $this->password = $password;
-    }
-
-    public function getRoles() {
-        if (empty($this->roles)) {
-            return ['ROLE_USER'];
-        }
-        return $this->roles;
-    }
-
-    function addRole($role) {
-        $this->roles[] = $role;
-    }
-
-    public function eraseCredentials() {
-
-    }
-
-    /** @see \Serializable::serialize() */
-    public function serialize() {
-        return serialize(array(
-            $this->id,
-            $this->email,
-            $this->password,
-            $this->isActive,
-            // see section on salt below
-            // $this->salt,
-        ));
-    }
-
-    /** @see \Serializable::unserialize() */
-    public function unserialize($serialized) {
-        list (
-            $this->id,
-            $this->email,
-            $this->password,
-            $this->isActive,
-            // see section on salt below
-            // $this->salt
-            ) = unserialize($serialized);
-    }
-
-    function getId() {
+    public function getId(): ?int
+    {
         return $this->id;
     }
 
-    function getEmail() {
-        return $this->email;
+    public function getUsername(): ?string
+    {
+        return $this->username;
     }
 
-    function getPlainPassword() {
-        return $this->plainPassword;
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
     }
 
-    function getIsActive() {
-        return $this->isActive;
+    public function getPassword(): ?string
+    {
+        return $this->password;
     }
 
-    function setId($id) {
-        $this->id = $id;
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
     }
 
-    function setEmail($email) {
-        $this->email = $email;
+    public function getName(): ?string
+    {
+        return $this->name;
     }
 
-    function setPlainPassword($plainPassword) {
-        $this->plainPassword = $plainPassword;
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
-    function setIsActive($isActive) {
-        $this->isActive = $isActive;
+    /**
+     * @return Collection
+     */
+    public function getVehicles(): Collection
+    {
+        return $this->vehicles;
     }
+
 }

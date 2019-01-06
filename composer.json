@@ -59,6 +59,7 @@
         }
     },
     "require-dev": {
+        "api-platform/schema-generator": "^2.1",
         "symfony/web-server-bundle": "4.2.*"
     }
 }

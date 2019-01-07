@@ -38,6 +38,17 @@ class AppFixtures extends Fixture
         ));
 
         $manager->persist($user);
+
+        $user2 = new User();
+        $user2->setName("Jacek");
+        $user2->setUsername("jacek");
+        $user2->setEmail('jacek@motta.com.pl');
+        $user2->setPassword($this->passwordEncoder->encodePassword(
+            $user2,
+            "jacek"
+        ));
+
+        $manager->persist($user2);
         $manager->flush();
     }
 }

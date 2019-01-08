@@ -3,6 +3,8 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use App\Entity\Vehicle;
+use App\Entity\VehicleModel;
 use App\Entity\VehicleProducer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -35,6 +37,39 @@ class AppFixtures extends Fixture
     {
         // $product = new Product();
         // $manager->persist($product);
+        $this->loadUsers($manager);
+        $this->loadVehiclesProducers($manager);
+        $this->loadVehiclesModels($manager);
+        $this->loadUserVehicles($manager);
+    }
+
+    public function loadVehiclesProducers(ObjectManager $manager)
+    {
+        for ($i = 0; $i < 20; $i++)
+        {
+            $vehicleProducer = new VehicleProducer();
+            $vehicleProducer->setName($this->faker->company);
+            $vehicleProducer->setCreatedAt($this->faker->dateTime);
+            $manager->persist($vehicleProducer);
+        }
+        $manager->flush();
+    }
+
+    public function loadVehiclesModels(ObjectManager $manager)
+    {
+        for ($i = 0; $i < 20; $i++)
+        {
+            $vehicleModel = new VehicleModel();
+            $vehicleModel->setName($this->faker->name());
+            $vehicleModel->setCreatedAt($this->faker->dateTimeThisYear());
+            $manager->persist($vehicleModel);
+        }
+        $manager->flush();
+    }
+
+    public function loadUsers(ObjectManager $manager)
+    {
+
         $user = new User();
         $user->setName("Marek");
         $user->setUsername("marekz");
@@ -43,26 +78,21 @@ class AppFixtures extends Fixture
             $user,
             "marekz"
         ));
-
+        $this->addReference('user_admin', $user);
         $manager->persist($user);
+        $manager->flush();
+    }
 
-        $user2 = new User();
-        $user2->setName("Jacek");
-        $user2->setUsername("jacek");
-        $user2->setEmail('jacek@motta.com.pl');
-        $user2->setPassword($this->passwordEncoder->encodePassword(
-            $user2,
-            "jacek"
-        ));
-
-        $manager->persist($user2);
-
-        for ($i = 0; $i < 20; $i++)
-        {
-            $vehicleProducer = new VehicleProducer();
-            $vehicleProducer->setName($this->faker->company);
-            $vehicleProducer->setCreatedAt($this->faker->dateTime);
-            $manager->persist($vehicleProducer);
+    public function loadUserVehicles(ObjectManager $manager)
+    {
+        for ($i = 0; $i < 10; $i++) {
+            $vehicle = new Vehicle();
+            $vehicle->setCreateAt($this->faker->dateTimeThisYear());
+            $vehicle->setDateProduction($this->faker->dateTimeBetween($startDate = '-10 years', $endDate = 'now'));
+            $vehicle->setUpdatedAt($this->faker->dateTime());
+            $vehicle->setVehicleMilage($this->faker->numberBetween($min = 10000, $max = 1000000));
+            $vehicle->setVinNumber($this->faker->creditCardNumber());
+            $manager->persist($vehicle);
         }
         $manager->flush();
     }

@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use App\Entity\VehicleProducer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -15,12 +16,18 @@ class AppFixtures extends Fixture
     private $passwordEncoder;
 
     /**
+     * @var \Faker\Factory
+     */
+    private $faker;
+
+    /**
      * AppFixtures constructor.
      * @param $passwordEncoder
      */
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->passwordEncoder = $passwordEncoder;
+        $this->faker = \Faker\Factory::create();
     }
 
 
@@ -49,6 +56,14 @@ class AppFixtures extends Fixture
         ));
 
         $manager->persist($user2);
+
+        for ($i = 0; $i < 20; $i++)
+        {
+            $vehicleProducer = new VehicleProducer();
+            $vehicleProducer->setName($this->faker->company);
+            $vehicleProducer->setCreatedAt($this->faker->dateTime);
+            $manager->persist($vehicleProducer);
+        }
         $manager->flush();
     }
 }

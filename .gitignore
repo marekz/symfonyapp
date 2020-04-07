@@ -28,3 +28,7 @@ symfony.lock
 .settings/
 nbproject/
 Grafiki/
+.idea/
+composer.lock
+symfony.lock
+.buildpath

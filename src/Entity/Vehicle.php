@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -40,14 +41,13 @@ class Vehicle
     private $createAt;
 
     /**
-     * @var
      * @ORM\ManyToMany(targetEntity="User", mappedBy="vehicles")
      */
-    private $owners;
+    private $users;
 
     public function __construct()
     {
-        $this->owners = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     /**
@@ -125,20 +125,22 @@ class Vehicle
     }
 
     /**
-     * @return User
+     * @return Collection
      */
-    public function getOwners(): User
+    public function getUsers(): Collection
     {
-        return $this->owners;
+        return $this->users;
     }
-
-    /**
-     * @param User $owners
-     */
-    public function setOwners(User $owners): void
+    
+    public function addUser(User $user): self
     {
-        $this->owners = $owners;
+        $this->users[] = $user;
+        return $this;
     }
-
-
+    
+    public function removeUser(User $user): bool
+    {
+        return $this->users->removeElement($user);
+    }
+    
 }

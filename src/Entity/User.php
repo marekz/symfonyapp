@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
-
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ApiResource(
  *     itemOperations={"get"},
@@ -44,6 +44,13 @@ class User implements UserInterface
      * @Groups({"read"})
      */
     private $name;
+    
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"read"})
+     */
+    private $lastName;
+    
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"read"})
@@ -51,12 +58,29 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @var
-     * @ORM\ManyToMany(targetEntity="Vehicle", inversedBy="owners")
-     * @ORM\JoinTable(name="users_vehicles")
-     * @Groups({"read"})
+     * @ORM\ManyToMany(targetEntity="Vehicle", inversedBy="users", cascade={"persist"})
+     * @ORM\JoinTable(
+     *      name="users_vehicles",
+     *      joinColumns={
+     *          @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *      },
+     *      inverseJoinColumns={
+     *          @ORM\JoinColumn(name="vehicle_id", referencedColumnName="id")
+     *      }
+     * )
      */
     private $vehicles;
+    
+//    /**
+//     *
+//     * @var 
+//     * @ORM\Column(type="integer")
+//     */
+//    private $contact;
+    
+    public function __construct() {
+        $this->vehicles = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -97,14 +121,6 @@ class User implements UserInterface
         $this->name = $name;
 
         return $this;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getVehicles(): Collection
-    {
-        return $this->vehicles;
     }
 
     /**
@@ -163,5 +179,24 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         return null;
+    }
+    
+    public function addVehicles(Vehicle $vehicle): self
+    {
+        $this->vehicles[] = $vehicle;
+        return $this;
+    }
+    
+    public function removeVehicle(Vehicle $vehicle): bool 
+    {
+        return $this->vehicles->removeElement($vehicle);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getVehicles(): Collection
+    {
+        return $this->vehicles;
     }
 }

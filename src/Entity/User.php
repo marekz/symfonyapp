@@ -8,15 +8,23 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraint as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ApiResource(
- *     itemOperations={"get"},
- *     collectionOperations={"get","post"},
+ *     itemOperations={
+ *          "get" = {
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
+ *          }
+ *      },
+ *     collectionOperations={"post"},
  *     normalizationContext={
  *          "groups"={"read"}
  *     }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(fields="username")
+ * @UniqueEntity(fields="email")
  */
 class User implements UserInterface
 {

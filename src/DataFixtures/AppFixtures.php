@@ -74,6 +74,7 @@ class AppFixtures extends Fixture
         $user->setName("Marek");
         $user->setUsername("marekz");
         $user->setEmail('marek@motta.com.pl');
+        $user->setLastName('Zdybel');
         $user->setPassword($this->passwordEncoder->encodePassword(
             $user,
             "marekz"

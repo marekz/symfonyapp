@@ -76,6 +76,7 @@ class User implements UserInterface
      *          @ORM\JoinColumn(name="vehicle_id", referencedColumnName="id")
      *      }
      * )
+     * @Groups({"read"})
      */
     private $vehicles;
     

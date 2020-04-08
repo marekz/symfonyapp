@@ -37,10 +37,10 @@ class AppFixtures extends Fixture
     {
         // $product = new Product();
         // $manager->persist($product);
-        $this->loadUsers($manager);
         $this->loadVehiclesProducers($manager);
         $this->loadVehiclesModels($manager);
         $this->loadUserVehicles($manager);
+        $this->loadUsers($manager);
     }
 
     public function loadVehiclesProducers(ObjectManager $manager)
@@ -69,6 +69,10 @@ class AppFixtures extends Fixture
 
     public function loadUsers(ObjectManager $manager)
     {
+        
+        $vehicle_1 = $this->getReference('vehicle_1');
+        $vehicle_2 = $this->getReference('vehicle_2');
+        $vehicle_3 = $this->getReference('vehicle_3');
 
         $user = new User();
         $user->setName("Marek");
@@ -79,6 +83,9 @@ class AppFixtures extends Fixture
             $user,
             "marekz"
         ));
+        $user->addVehicles($vehicle_1);
+        $user->addVehicles($vehicle_2);
+        $user->addVehicles($vehicle_3);
         $this->addReference('user_admin', $user);
         $manager->persist($user);
         $manager->flush();
@@ -93,8 +100,9 @@ class AppFixtures extends Fixture
             $vehicle->setUpdatedAt($this->faker->dateTime());
             $vehicle->setVehicleMilage($this->faker->numberBetween($min = 10000, $max = 1000000));
             $vehicle->setVinNumber($this->faker->creditCardNumber());
+            $this->addReference('vehicle_' . $i, $vehicle);
             $manager->persist($vehicle);
         }
         $manager->flush();
-    }
+    }    
 }

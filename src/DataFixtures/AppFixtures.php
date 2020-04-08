@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Vehicle;
 use App\Entity\VehicleModel;
 use App\Entity\VehicleProducer;
+use App\Entity\Contact;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -35,12 +36,11 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        // $product = new Product();
-        // $manager->persist($product);
         $this->loadVehiclesProducers($manager);
         $this->loadVehiclesModels($manager);
         $this->loadUserVehicles($manager);
         $this->loadUsers($manager);
+        $this->loadUserContacts($manager);
     }
 
     public function loadVehiclesProducers(ObjectManager $manager)
@@ -104,5 +104,22 @@ class AppFixtures extends Fixture
             $manager->persist($vehicle);
         }
         $manager->flush();
-    }    
+    }
+
+    public function loadUserContacts(ObjectManager $manager)
+    {
+        $user = $this->getReference('user_admin');
+        $contact = new Contact();
+        $contact->setCity("Warsaw");
+        $contact->setCountry("Poland");
+        $contact->setStreet("Gorlicka");
+        $contact->setStreetNr("10");
+        $contact->setFlatNr("42");
+        $contact->setPhone(607825735);
+        $contact->setZipCode("02-130");
+        $contact->setUser($user);
+        $manager->persist($contact);
+        
+        $manager->flush();
+    }
 }

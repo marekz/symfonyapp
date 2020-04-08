@@ -80,12 +80,11 @@ class User implements UserInterface
      */
     private $vehicles;
     
-//    /**
-//     *
-//     * @var 
-//     * @ORM\Column(type="integer")
-//     */
-//    private $contact;
+    /**
+     * @ORM\OneToOne(targetEntity="Contact", mappedBy="user", cascade={"persist","remove"})
+     * @Groups({"read"})
+     */
+    private $contact;
     
     public function __construct() {
         $this->vehicles = new ArrayCollection();
@@ -218,5 +217,16 @@ class User implements UserInterface
     public function getVehicles(): Collection
     {
         return $this->vehicles;
+    }
+    
+    public function getContact(): Contact
+    {
+        return $this->contact;
+    }
+    
+    public function setContact(Contact $contact): self
+    {
+        $this->contact = $contact;
+        return $this;
     }
 }

@@ -8,9 +8,20 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraint as Asert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     itemOperations={
+ *          "get" = {
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
+ *          }
+ *      },
+ *     collectionOperations={"post"},
+ *     normalizationContext={
+ *          "groups"={"vehicle"}
+ *     }
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\VehicleRepository")
  * @UniqueEntity(fields="vinNumber")
  */
@@ -20,31 +31,37 @@ class Vehicle
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"vehicle"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"vehicle"})
      */
     private $dateProduction;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"vehicle"})
      */
     private $vinNumber;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"vehicle"})
      */
     private $vehicleMilage;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"vehicle"})
      */
     private $createAt;
 
     /**
      * @ORM\ManyToMany(targetEntity="User", mappedBy="vehicles")
+     * @Groups({"vehicle"})
      */
     private $users;
 

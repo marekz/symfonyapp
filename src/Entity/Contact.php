@@ -6,18 +6,25 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
- *     itemOperations={
- *          "get" = {
+ *      itemOperations={
+ *          "get",
+ *          "put"={
+ *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY') and object.getUser() == user"
+ *          }
+ *      },
+ *      collectionOperations={
+ *          "get",
+ *          "post"={
  *              "access_control"="is_granted('IS_AUTHENTICATED_FULLY')"
  *          }
  *      },
- *     collectionOperations={"post"},
- *     normalizationContext={
+ *      normalizationContext={
  *          "groups"={"contact"}
- *     }
+ *      }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\ContactRepository")
  * @UniqueEntity(fields="phone")
@@ -43,18 +50,21 @@ class Contact
     /**
      * @ORM\Column(type="integer")
      * @Groups({"contact"})
+     * @Assert\NotBlank()
      */
     private $phone;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"contact"})
+     * @Assert\NotBlank()
      */
     private $country;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"contact"})
+     * @Assert\NotBlank()
      */
     private $city;
 

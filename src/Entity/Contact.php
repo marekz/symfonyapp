@@ -7,7 +7,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use ApiPlatform\Core\Annotation\ApiSubresource;
 /**
  * @ApiResource(
  *      itemOperations={
@@ -44,6 +44,7 @@ class Contact
      * @ORM\OneToOne(targetEntity="User", inversedBy="contact", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      * @Groups({"contact"})
+     * @ApiSubresource()
      */
     private $user;
 

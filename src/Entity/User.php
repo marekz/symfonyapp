@@ -10,6 +10,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 /**
  * @ApiResource(
  *     itemOperations={
@@ -113,13 +114,15 @@ class User implements UserInterface
      *          @ORM\JoinColumn(name="vehicle_id", referencedColumnName="id")
      *      }
      * )
-     * @Groups({"get"})
+     * @Groups({"get","post"})
+     * @ApiSubresource()
      */
     private $vehicles;
     
     /**
      * @ORM\OneToOne(targetEntity="Contact", mappedBy="user", cascade={"persist","remove"})
-     * @Groups({"get"})
+     * @Groups({"get","post"})
+     * @ApiSubresource()
      */
     private $contact;
     

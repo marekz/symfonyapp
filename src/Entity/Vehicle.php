@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Asert;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 
 /**
  * @ApiResource(
@@ -62,6 +63,7 @@ class Vehicle
     /**
      * @ORM\ManyToMany(targetEntity="User", mappedBy="vehicles")
      * @Groups({"vehicle"})
+     * @ApiSubresource()
      */
     private $users;
 

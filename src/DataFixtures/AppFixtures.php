@@ -22,6 +22,44 @@ class AppFixtures extends Fixture
      * @var \Faker\Factory
      */
     private $faker;
+    
+    private const USERS = [
+        [
+            'username' => 'admin',
+            'email' => 'admin@motta.com.pl',
+            'name' => 'Admin',
+            'password' => 'secret123#',
+            'lastName' => 'Adminowicz',
+        ],
+        [
+            'username' => 'marekz',
+            'email' => 'marek@motta.com.pl',
+            'name' => 'Marek',
+            'password' => 'secret123#',
+            'lastName' => 'Zdybel',
+        ],
+        [
+            'username' => 'magdaz',
+            'email' => 'magda@motta.com.pl',
+            'name' => 'Magda',
+            'password' => 'secret123#',
+            'lastName' => 'Zdybel',
+        ],
+        [
+            'username' => 'zuzaz',
+            'email' => 'zuzia@motta.com.pl',
+            'name' => 'Zuzanna',
+            'password' => 'secret123#',
+            'lastName' => 'Zdybel',
+        ],
+        [
+            'username' => 'kajetanz',
+            'email' => 'kajetan@motta.com.pl',
+            'name' => 'Kajetan',
+            'password' => 'secret123#',
+            'lastName' => 'Zdybel',
+        ]
+    ];
 
     /**
      * AppFixtures constructor.
@@ -73,21 +111,30 @@ class AppFixtures extends Fixture
         $vehicle_1 = $this->getReference('vehicle_1');
         $vehicle_2 = $this->getReference('vehicle_2');
         $vehicle_3 = $this->getReference('vehicle_3');
-
-        $user = new User();
-        $user->setName("Marek");
-        $user->setUsername("marekz");
-        $user->setEmail('marek@motta.com.pl');
-        $user->setLastName('Zdybel');
-        $user->setPassword($this->passwordEncoder->encodePassword(
-            $user,
-            "marekz"
-        ));
-        $user->addVehicles($vehicle_1);
-        $user->addVehicles($vehicle_2);
-        $user->addVehicles($vehicle_3);
-        $this->addReference('user_admin', $user);
-        $manager->persist($user);
+        
+        $i = 0;
+        
+        foreach (self::USERS as $userFixture) {
+            $user = new User();
+            $user->setName($userFixture['name']);
+            $user->setUsername($userFixture['username']);
+            $user->setEmail($userFixture['email']);
+            $user->setLastName($userFixture['lastName']);
+            $user->setPassword($this->passwordEncoder->encodePassword(
+                $user,
+                $userFixture['password']
+            ));
+            
+            $this->addReference('user_' . $userFixture['username'], $user);
+            
+            if ($i === 0) {
+                $user->addVehicles($vehicle_1);
+                $user->addVehicles($vehicle_2);
+                $user->addVehicles($vehicle_3);
+                $this->addReference($userFixture['username'], $user);
+            }
+            $manager->persist($user);
+        }
         $manager->flush();
     }
 

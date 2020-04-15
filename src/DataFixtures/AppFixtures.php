@@ -88,6 +88,9 @@ class AppFixtures extends Fixture
             $vehicleProducer = new VehicleProducer();
             $vehicleProducer->setName($this->faker->company);
             $vehicleProducer->setCreatedAt($this->faker->dateTime);
+            
+            $this->addReference('producer_' . $i , $vehicleProducer);
+            
             $manager->persist($vehicleProducer);
         }
         $manager->flush();
@@ -97,9 +100,12 @@ class AppFixtures extends Fixture
     {
         for ($i = 0; $i < 20; $i++)
         {
+            $producer = $this->getReference('producer_'.$i);
             $vehicleModel = new VehicleModel();
             $vehicleModel->setName($this->faker->name());
             $vehicleModel->setCreatedAt($this->faker->dateTimeThisYear());
+            $vehicleModel->setProducer($producer);
+            $this->addReference('model_' . $i , $vehicleModel);
             $manager->persist($vehicleModel);
         }
         $manager->flush();
@@ -141,12 +147,16 @@ class AppFixtures extends Fixture
     public function loadUserVehicles(ObjectManager $manager)
     {
         for ($i = 0; $i < 10; $i++) {
+            $model = $this->getReference('model_' . $i);
+            $producer = $this->getReference('producer_' . $i);
             $vehicle = new Vehicle();
             $vehicle->setCreateAt($this->faker->dateTimeThisYear());
             $vehicle->setDateProduction($this->faker->dateTimeBetween($startDate = '-10 years', $endDate = 'now'));
             $vehicle->setUpdatedAt($this->faker->dateTime());
             $vehicle->setVehicleMilage($this->faker->numberBetween($min = 10000, $max = 1000000));
             $vehicle->setVinNumber($this->faker->creditCardNumber());
+            $vehicle->setModel($model);
+            $vehicle->setProducer($producer);
             $this->addReference('vehicle_' . $i, $vehicle);
             $manager->persist($vehicle);
         }

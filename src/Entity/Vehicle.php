@@ -35,6 +35,18 @@ class Vehicle
      * @Groups({"vehicle"})
      */
     private $id;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="VehicleModel", inversedBy="vehicleModel", cascade={"persist"})
+     * @ORM\JoinColumn(name="model_id", referencedColumnName="id", nullable=false)
+     */
+    private $model;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="VehicleProducer", inversedBy="vehicleProducer", cascade={"persist"})
+     * @ORM\JoinColumn(name="producer_id", referencedColumnName="id", nullable=false)
+     */
+    private $producer;
 
     /**
      * @ORM\Column(type="datetime")
@@ -165,4 +177,25 @@ class Vehicle
         return $this->users->removeElement($user);
     }
     
+    public function getModel(): VehicleModel
+    {
+        return $this->model;
+    }
+
+    public function getProducer(): VehicleProducer
+    {
+        return $this->producer;
+    }
+
+    public function setModel(VehicleModel $model): self
+    {
+        $this->model = $model;
+        return $this;
+    }
+
+    public function setProducer(VehicleProducer $producer): self
+    {
+        $this->producer = $producer;
+        return $this;
+    }
 }

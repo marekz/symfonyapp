@@ -23,6 +23,18 @@ class VehicleModel
      * @ORM\Column(type="string", length=255)
      */
     private $name;
+    
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="VehicleProducer", inversedBy="producers", cascade={"persist"})
+     * @ORM\JoinColumn(name="producer_id", referencedColumnName="id", nullable=false)
+     */
+    private $producer;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Vehicle", mappedBy="model", cascade={"persist", "remove"})
+     */
+    private $vehicleModel;
 
     /**
      * @ORM\Column(type="datetime")
@@ -57,4 +69,28 @@ class VehicleModel
 
         return $this;
     }
+    
+    public function getProducer(): VehicleProducer
+    {
+        return $this->producer;
+    }
+
+    public function setProducer(VehicleProducer $producer): self
+    {
+        $this->producer = $producer;
+        return $this;
+    }
+    
+    public function getVehicleModel(): VehicleModel
+    {
+        return $this->vehicleModel;
+    }
+
+    public function setVehicleModel(VehicleModel $vehicleModel): self
+    {
+        $this->vehicleModel = $vehicleModel;
+        return $this;
+    }
+
+
 }

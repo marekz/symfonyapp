@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+    web:
+        build: ./web
+        image: webphp
+        ports:
+            - "80:80"
+        tty: true
+        stdin_open: true
+        links:
+            - db
+        volumes:
+            - ./web:/var/www/html
+    db:
+        build: ./db
+        restart: always
+        ports:
+            - "3306:3306"
+        tty: true
+        stdin_open: true
+    

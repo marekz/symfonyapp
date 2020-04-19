@@ -19,4 +19,12 @@ services:
             - "3306:3306"
         tty: true
         stdin_open: true
+        
+    vuejs:
+        build: ./vuejs
+        restart: always
+        ports:
+            - "8080:8080"
+        tty: true
+        stdin_open: true
     
